@@ -2,12 +2,16 @@
 /** @var \Adam\ConfigPrice\Block\Template $block */
 $product_id = (int) $this->getRequest()->getParam('id', false);
 $_product = $block->getProductById($product_id);
-$children = $_product->getTypeInstance()->getUsedProductCollection($_product)->getData();
-$lowestPrice = $block->getLowestPrice($children);
-$formatedprice = $block->getFormattedPrice($lowestPrice);
+
+if(!$_product->isSaleable() && $_product->getTypeId() == 'configurable') {
+	$children = $_product->getTypeInstance()->getUsedProductCollection($_product)->getData();
+	$lowestPrice = $block->getLowestPrice($children);
+	$formatedprice = $block->getFormattedPrice($lowestPrice);
+}
+
 ?>
 
-<?php if(!$_product->isSaleable()):?>
+<?php if(!$_product->isSaleable() && $_product->getTypeId() == 'configurable'):?>
 
 	<div class="price-box price-final_price" data-role="priceBox" data-product-id="<?= $product_id ;?>" data-price-box="product-id-<?= $product_id ;?>">
 
