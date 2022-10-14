@@ -1,0 +1,26 @@
+<?php
+/** @var \Adam\ConfigPrice\Block\Template $block */
+$product_id = (int) $this->getRequest()->getParam('id', false);
+$_product = $block->getProductById($product_id);
+$children = $_product->getTypeInstance()->getUsedProductCollection($_product)->getData();
+$lowestPrice = $block->getLowestPrice($children);
+$formatedprice = $block->getFormattedPrice($lowestPrice);
+?>
+
+<?php if(!$_product->isSaleable()):?>
+
+	<div class="price-box price-final_price" data-role="priceBox" data-product-id="<?= $product_id ;?>" data-price-box="product-id-<?= $product_id ;?>">
+
+	<span class="normal-price">
+
+	<span class="price-container price-final_price tax weee" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+			<span class="price-label">As low as</span>
+			<span id="product-price-<?= $product_id ;?>" data-price-amount="<?php echo $lowestPrice;?>" class="price-wrapper "><span class="price"><?php echo $formatedprice;?></span></span>
+			<meta itemprop="price" content="<?php echo $lowestPrice;?>">
+			<meta itemprop="priceCurrency" content="GBP">
+		</span>
+	</span>
+
+	</div>
+
+<?php endif;?>
